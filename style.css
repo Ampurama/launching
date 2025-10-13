@@ -60,7 +60,7 @@ body::before {
 }
 
 .glitch {
-  font-size: 2.5rem;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
   font-weight: 700;
   text-transform: uppercase;
   position: relative;
@@ -70,6 +70,7 @@ body::before {
     0 0 10px #00ffff,
     0 0 20px #00ffff,
     0 0 30px #00ffff;
+  padding: 0 20px;
 }
 
 .glitch::before,
@@ -115,11 +116,12 @@ body::before {
 }
 
 .subtitle {
-  font-size: 1rem;
-  letter-spacing: 8px;
+  font-size: clamp(0.7rem, 2vw, 1rem);
+  letter-spacing: clamp(3px, 1.5vw, 8px);
   margin-top: 15px;
   opacity: 0.8;
   animation: fadeInOut 1.5s ease-in-out infinite;
+  padding: 0 20px;
 }
 
 @keyframes fadeInOut {
@@ -129,8 +131,8 @@ body::before {
 
 #scanner {
   position: relative;
-  width: 350px;
-  height: 450px;
+  width: min(350px, 85vw);
+  height: min(450px, 70vh);
   margin: 0 auto;
   display: none;
   background: rgba(0, 20, 40, 0.5);
@@ -283,7 +285,7 @@ body::before {
 }
 
 .countdown-number {
-  font-size: 15rem;
+  font-size: clamp(8rem, 25vw, 15rem);
   font-weight: 900;
   color: #00ffff;
   text-shadow: 
@@ -311,12 +313,14 @@ body::before {
 }
 
 .countdown-text {
-  font-size: 2rem;
-  letter-spacing: 10px;
+  font-size: clamp(1rem, 4vw, 2rem);
+  letter-spacing: clamp(3px, 2vw, 10px);
   margin-top: 30px;
   color: #00ffff;
   text-shadow: 0 0 20px #00ffff;
   animation: textBlink 0.5s ease-in-out infinite;
+  padding: 0 20px;
+  text-align: center;
 }
 
 @keyframes textBlink {
@@ -324,9 +328,89 @@ body::before {
   50% { opacity: 0.5; }
 }
 
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #instruction {
+    margin-bottom: 30px;
+  }
+
+  .corner {
+    width: 30px;
+    height: 30px;
+    border-width: 2px;
+  }
+
+  .status-text {
+    font-size: 1rem;
+    letter-spacing: 2px;
+    bottom: 70px;
+  }
+
+  .progress-bar {
+    bottom: 30px;
+    left: 20px;
+    right: 20px;
+    height: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .glitch {
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    letter-spacing: 2px;
+  }
+
+  .corner {
+    width: 25px;
+    height: 25px;
+  }
+
+  .status-text {
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    bottom: 60px;
+  }
+
+  .progress-bar {
+    bottom: 25px;
+    left: 15px;
+    right: 15px;
+    height: 4px;
+  }
+
+  #countdown {
+    padding: 20px;
+  }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+  #instruction {
+    margin-bottom: 20px;
+  }
+
+  #scanner {
+    height: min(450px, 60vh);
+  }
+
+  .status-text {
+    bottom: 50px;
+    font-size: 0.9rem;
+  }
+
+  .progress-bar {
+    bottom: 20px;
+  }
+}
+
 #launchVideo {
   display: none;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
