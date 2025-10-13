@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Launching Hand Scan</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="container">
+    <div id="particles"></div>
+    <div id="instruction">
+      <div class="glitch" data-text="TEMPELKAN TANGAN ANDA">TEMPELKAN TANGAN ANDA</div>
+      <div class="subtitle">UNTUK MEMULAI PELUNCURAN</div>
+    </div>
+    <div id="scanner">
+      <div class="corner top-left"></div>
+      <div class="corner top-right"></div>
+      <div class="corner bottom-left"></div>
+      <div class="corner bottom-right"></div>
+      <div id="scan-line"></div>
+      <div class="hexagon-grid"></div>
+      <div class="status-text">SCANNING...</div>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <video id="launchVideo" src="launch.mp4"></video>
+
+  <audio id="scanSound" src="scan-sound.mp3"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
