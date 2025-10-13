@@ -268,6 +268,62 @@ body::before {
   100% { top: 100%; }
 }
 
+#countdown {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.countdown-number {
+  font-size: 15rem;
+  font-weight: 900;
+  color: #00ffff;
+  text-shadow: 
+    0 0 30px #00ffff,
+    0 0 60px #00ffff,
+    0 0 90px #00ffff,
+    0 0 120px #00ffff;
+  animation: countdownPulse 1s ease-in-out;
+  line-height: 1;
+}
+
+@keyframes countdownPulse {
+  0% { 
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% { 
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% { 
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.countdown-text {
+  font-size: 2rem;
+  letter-spacing: 10px;
+  margin-top: 30px;
+  color: #00ffff;
+  text-shadow: 0 0 20px #00ffff;
+  animation: textBlink 0.5s ease-in-out infinite;
+}
+
+@keyframes textBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
 #launchVideo {
   display: none;
   width: 100%;
