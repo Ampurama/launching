@@ -48,6 +48,10 @@ function showInteractiveOverlay() {
   const startExperience = async (e) => {
     e.preventDefault();
     userHasInteracted = true;
+    
+    // Enter fullscreen first
+    await enterFullscreen(document.documentElement);
+    
     overlay.remove();
     
     // Now play with sound
@@ -73,6 +77,9 @@ window.addEventListener('load', () => {
 
 async function tryAutoplay() {
   try {
+    // Enter fullscreen first
+    await enterFullscreen(document.documentElement);
+    
     instruction.style.display = 'none';
     initialVideo.style.display = 'block';
     document.body.classList.add('video-playing');
@@ -88,9 +95,6 @@ async function tryAutoplay() {
       initialVideo.muted = false;
       initialVideo.volume = 1;
     }, 100);
-    
-    // Try fullscreen
-    await enterFullscreen(initialVideo);
     
   } catch (err) {
     console.log('Autoplay failed:', err);
@@ -110,9 +114,6 @@ async function playInitialVideoWithSound() {
     await initialVideo.play();
     
     console.log('Video playing with sound');
-    
-    // Fullscreen
-    await enterFullscreen(initialVideo);
     
   } catch (err) {
     console.error('Play error:', err);
@@ -164,10 +165,7 @@ initialVideo.addEventListener('ended', async () => {
   initialVideoPlayed = true;
   canStartScan = true;
   
-  // Exit fullscreen temporarily
-  await exitFullscreen();
-  
-  // Show scan instruction
+  // Stay in fullscreen, just show instruction overlay
   instruction.innerHTML = `
     <div class="glitch" data-text="TEMPELKAN TANGAN ANDA">TEMPELKAN TANGAN ANDA</div>
     <div class="subtitle">UNTUK MEMULAI PELUNCURAN</div>
@@ -190,9 +188,7 @@ async function handleScanClick(e) {
   document.body.removeEventListener('click', handleScanClick);
   document.body.removeEventListener('touchstart', handleScanClick);
   
-  // Enter fullscreen for scanning
-  await enterFullscreen(document.documentElement);
-  
+  // Already in fullscreen, just start scan
   startScan();
 }
 
@@ -260,9 +256,6 @@ async function playLaunchVideo() {
   try {
     await video.play();
     console.log('Launch video playing');
-    
-    // Ensure fullscreen for launch video
-    await enterFullscreen(video);
     
   } catch (err) {
     console.error('Launch video play failed:', err);
