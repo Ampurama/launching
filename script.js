@@ -190,7 +190,7 @@ function startHandScan() {
     scannerElement.id = `scanner-${i}`;
     scannerElement.className = 'hand-scanner';
     scannerElement.innerHTML = `
-
+      <div class="hand-icon">👋</div>
       <div class="scan-beam"></div>
       <div class="scan-particles"></div>
     `;
