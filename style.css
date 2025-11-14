@@ -9,6 +9,7 @@ body {
   font-family: 'Orbitron', 'Rajdhani', sans-serif;
   overflow: hidden;
   position: relative;
+  cursor: pointer;
 }
 
 body::before {
@@ -318,9 +319,392 @@ body::after {
   100% { width: 100%; }
 }
 
-@keyframes scan {
-  0% { top: 0; }
-  100% { top: 100%; }
+
+.hand-scanner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.scanner-box {
+  position: relative;
+  width: 80%;
+  max-width: 500px;
+  aspect-ratio: 3/4;
+  background: rgba(0, 20, 40, 0.4);
+  border: 3px solid rgba(0, 255, 255, 0.5);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 
+    0 0 30px rgba(0, 255, 255, 0.3),
+    inset 0 0 50px rgba(0, 255, 255, 0.1);
+  transition: all 0.5s ease;
+}
+
+.hand-scanner.scan-complete .scanner-box {
+  border-color: rgba(0, 255, 0, 0.8);
+  box-shadow: 
+    0 0 40px rgba(0, 255, 0, 0.6),
+    inset 0 0 60px rgba(0, 255, 0, 0.2);
+}
+
+.box-corners {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.box-corner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 3px solid #00ffff;
+  transition: border-color 0.5s ease;
+}
+
+.hand-scanner.scan-complete .box-corner {
+  border-color: #00ff00;
+}
+
+.box-corner.top-left {
+  top: 15px;
+  left: 15px;
+  border-right: none;
+  border-bottom: none;
+  border-radius: 15px 0 0 0;
+}
+
+.box-corner.top-right {
+  top: 15px;
+  right: 15px;
+  border-left: none;
+  border-bottom: none;
+  border-radius: 0 15px 0 0;
+}
+
+.box-corner.bottom-left {
+  bottom: 15px;
+  left: 15px;
+  border-right: none;
+  border-top: none;
+  border-radius: 0 0 0 15px;
+}
+
+.box-corner.bottom-right {
+  bottom: 15px;
+  right: 15px;
+  border-left: none;
+  border-top: none;
+  border-radius: 0 0 15px 0;
+}
+
+.hand-scanner.clickable {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hand-scanner.clickable:hover {
+  transform: translateY(-50%) scale(1.02);
+}
+
+.hand-scanner.clickable .scanner-box {
+  cursor: pointer;
+  animation: boxPulse 2s ease-in-out infinite;
+}
+
+.hand-scanner.clickable:hover .scanner-box {
+  border-color: rgba(0, 255, 255, 0.8);
+  box-shadow: 
+    0 0 50px rgba(0, 255, 255, 0.5),
+    inset 0 0 70px rgba(0, 255, 255, 0.2);
+}
+
+@keyframes boxPulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 30px rgba(0, 255, 255, 0.3),
+      inset 0 0 50px rgba(0, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 40px rgba(0, 255, 255, 0.5),
+      inset 0 0 60px rgba(0, 255, 255, 0.15);
+  }
+}
+
+.hand-scanner.clickable .hand-icon {
+  width: 50%;
+  max-width: 200px;
+  height: auto;
+  opacity: 0.9;
+  transition: all 0.4s ease;
+  filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.8))
+          drop-shadow(0 0 60px rgba(0, 200, 255, 0.5));
+  position: relative;
+  z-index: 2;
+  color: #00ffff;
+}
+
+.hand-scanner.clickable:hover .hand-icon {
+  opacity: 1;
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 40px rgba(0, 255, 255, 1))
+          drop-shadow(0 0 80px rgba(0, 200, 255, 0.7));
+}
+
+.hand-scanner.clickable .scan-beam.static {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, 
+    transparent 0%, 
+    rgba(0, 255, 255, 0.2) 20%,
+    rgba(0, 255, 255, 0.5) 50%,
+    rgba(0, 255, 255, 0.2) 80%,
+    transparent 100%);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  animation: staticBeamPulse 2s ease-in-out infinite;
+}
+
+.hand-scanner.clickable .scan-particles.static {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Multiple particle layers for depth */
+.hand-scanner.clickable .scan-particles.static::before,
+.hand-scanner.clickable .scan-particles.static::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, rgba(0, 255, 255, 1) 0%, transparent 70%);
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+}
+
+.hand-scanner.clickable .scan-particles.static::before {
+  top: 25%;
+  left: 30%;
+  animation: staticParticle 3s ease-in-out infinite, particleDrift 4s ease-in-out infinite;
+}
+
+.hand-scanner.clickable .scan-particles.static::after {
+  top: 65%;
+  right: 25%;
+  animation: staticParticle 4s ease-in-out infinite reverse, particleDrift 5s ease-in-out infinite reverse;
+}
+
+.hand-icon {
+  width: 50%;
+  max-width: 200px;
+  height: auto;
+  filter: drop-shadow(0 0 40px #00ffff)
+          drop-shadow(0 0 80px rgba(0, 200, 255, 0.6));
+  animation: handPulseScanning 1s ease-in-out infinite;
+  position: relative;
+  z-index: 5;
+  color: #00ffff;
+  transition: filter 0.5s ease;
+}
+
+.hand-scanner.scan-complete .hand-icon {
+  color: #00ff00;
+  filter: drop-shadow(0 0 40px #00ff00)
+          drop-shadow(0 0 80px rgba(0, 255, 0, 0.6));
+}
+
+.hand-icon svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Scanning grid overlay */
+.hand-scanner .scan-beam::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  left: -50%;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 10px,
+    rgba(0, 255, 255, 0.1) 10px,
+    rgba(0, 255, 255, 0.1) 11px
+  );
+}
+
+.scan-beam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(0, 255, 255, 0.3) 20%,
+    rgba(0, 255, 255, 1) 50%,
+    rgba(0, 255, 255, 0.3) 80%,
+    transparent 100%);
+  box-shadow: 
+    0 0 30px rgba(0, 255, 255, 1),
+    0 0 60px rgba(0, 255, 255, 0.7),
+    0 4px 40px rgba(0, 255, 255, 0.5);
+  animation: scanBeamAdvanced 4s ease-in-out forwards;
+  filter: blur(1px);
+  z-index: 10;
+}
+
+.hand-scanner.scan-complete .scan-beam {
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(0, 255, 0, 0.3) 20%,
+    rgba(0, 255, 0, 1) 50%,
+    rgba(0, 255, 0, 0.3) 80%,
+    transparent 100%);
+  box-shadow: 
+    0 0 30px rgba(0, 255, 0, 1),
+    0 0 60px rgba(0, 255, 0, 0.7);
+}
+
+.scan-beam::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #00ffff;
+  box-shadow: 0 0 20px #00ffff;
+  transform: translateY(-50%);
+}
+
+.hand-scanner.scan-complete .scan-beam::after {
+  background: #00ff00;
+  box-shadow: 0 0 20px #00ff00;
+}
+
+.scan-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Data points appearing during scan */
+.particle {
+  position: absolute;
+  background: rgba(0, 255, 255, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 1);
+  animation: particleFloatAdvanced 3s ease-out forwards;
+}
+
+@keyframes handPulseScanning {
+  0%, 100% { 
+    transform: scale(1);
+    filter: drop-shadow(0 0 40px #00ffff)
+            drop-shadow(0 0 80px rgba(0, 200, 255, 0.6));
+  }
+  50% { 
+    transform: scale(1.03);
+    filter: drop-shadow(0 0 60px #00ffff)
+            drop-shadow(0 0 120px rgba(0, 200, 255, 0.8));
+  }
+}
+
+@keyframes scanBeamAdvanced {
+  0% { 
+    top: -5%;
+    opacity: 0;
+    height: 8px;
+  }
+  5% { 
+    opacity: 1;
+    height: 12px;
+  }
+  50% {
+    height: 10px;
+  }
+  95% { 
+    opacity: 1;
+    height: 12px;
+  }
+  100% { 
+    top: 105%;
+    opacity: 0;
+    height: 8px;
+  }
+}
+
+@keyframes particleFloatAdvanced {
+  0% { 
+    transform: translateY(0) scale(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-20px) scale(1);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% { 
+    transform: translateY(-150px) scale(0.5) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+@keyframes staticParticle {
+  0%, 100% { 
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 1;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes staticBeamPulse {
+  0%, 100% {
+    opacity: 0.5;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.8);
+  }
+}
+
+@keyframes particleDrift {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(10px, -10px);
+  }
+  50% {
+    transform: translate(5px, 10px);
+  }
+  75% {
+    transform: translate(-8px, 5px);
+  }
 }
 
 #countdown {
@@ -458,10 +842,10 @@ body::after {
   }
 }
 
-#initialVideo, #launchVideo {
+#initialVideo, #launchVideo, #secondAttemptVideo, #processVideo {
   display: none;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   object-fit: cover;
   position: fixed;
   top: 0;
@@ -476,4 +860,13 @@ body.video-playing #particles {
 body.video-playing::before,
 body.video-playing::after {
   display: none;
+}
+
+body.blank-screen::before,
+body.blank-screen::after {
+  display: none;
+}
+
+body.blank-screen {
+  background: #000 !important;
 }
